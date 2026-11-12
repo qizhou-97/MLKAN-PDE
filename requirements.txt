@@ -1,0 +1,7 @@
+tensorflow==2.12.0
+numpy>=1.23,<1.24
+scipy>=1.9
+pandas>=1.5
+matplotlib>=3.6
+psutil>=5.9
+pytest>=7.0

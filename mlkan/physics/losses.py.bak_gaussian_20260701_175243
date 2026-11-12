@@ -1,0 +1,86 @@
+from __future__ import annotations
+
+import tensorflow as tf
+
+from .operators import dx_periodic_1d, dxx_periodic_1d, gradient_2d, laplacian_2d
+
+
+def _mean_square(x):
+    return tf.reduce_mean(tf.square(x))
+
+
+def pde_residual(task, raw_x, pred, metadata):
+    h = tf.cast(metadata["h"], pred.dtype)
+    channels = metadata["input_channels"]
+    if task == "burgers":
+        previous = raw_x[..., channels["u_previous"]:channels["u_previous"] + 1]
+        nu = raw_x[..., channels["viscosity"]:channels["viscosity"] + 1]
+        dt = raw_x[..., channels["dt"]:channels["dt"] + 1]
+        return (pred - previous) / dt + pred * dx_periodic_1d(pred, h) - nu * dxx_periodic_1d(pred, h)
+    if task == "allen_cahn":
+        previous = raw_x[..., channels["u_previous"]:channels["u_previous"] + 1]
+        epsilon = raw_x[..., channels["epsilon"]:channels["epsilon"] + 1]
+        dt = raw_x[..., channels["dt"]:channels["dt"] + 1]
+        return ((pred - previous) / dt - epsilon * epsilon * dxx_periodic_1d(pred, h)
+                - pred + pred ** 3)
+    if task == "gaussian_heat":
+        previous = raw_x[..., channels["u_previous"]:channels["u_previous"] + 1]
+        alpha = raw_x[..., channels["diffusivity"]:channels["diffusivity"] + 1]
+        dt = raw_x[..., channels["dt"]:channels["dt"] + 1]
+        return (pred - previous) / dt - alpha * laplacian_2d(pred, h, periodic=True)
+    if task in {"trig_n4", "peak", "exp_trig"}:
+        source = raw_x[..., channels["source"]:channels["source"] + 1]
+        return -laplacian_2d(pred, h, periodic=False) - source[:, 1:-1, 1:-1]
+    raise ValueError(task)
+
+
+def boundary_loss(task, raw_x, pred, metadata):
+    if task not in {"trig_n4", "peak", "exp_trig"}:
+        return tf.constant(0.0, dtype=pred.dtype)
+    channels = metadata["input_channels"]
+    values = raw_x[..., channels["boundary_value"]:channels["boundary_value"] + 1]
+    mask = raw_x[..., channels["boundary_mask"]:channels["boundary_mask"] + 1]
+    return tf.reduce_sum(tf.square((pred - values) * mask)) / (tf.reduce_sum(mask) + 1.0e-8)
+
+
+def gradient_loss(task, target, pred, metadata):
+    h = tf.cast(metadata["h"], pred.dtype)
+    if metadata["dimension"] == 1:
+        target_grad = dx_periodic_1d(target, h)
+        return (_mean_square(dx_periodic_1d(pred, h) - target_grad)
+                / (_mean_square(target_grad) + 1.0e-8))
+    periodic = metadata["boundary"] == "periodic"
+    px, py = gradient_2d(pred, h, periodic=periodic)
+    tx, ty = gradient_2d(target, h, periodic=periodic)
+    numerator = 0.5 * (_mean_square(px - tx) + _mean_square(py - ty))
+    denominator = 0.5 * (_mean_square(tx) + _mean_square(ty))
+    return numerator / (denominator + 1.0e-8)
+
+
+def residual_reference_scale(task, raw_x, target, metadata):
+    channels = metadata["input_channels"]
+    if task in {"trig_n4", "peak", "exp_trig"}:
+        source = raw_x[..., channels["source"]:channels["source"] + 1]
+        return _mean_square(source[:, 1:-1, 1:-1])
+    previous = raw_x[..., channels["u_previous"]:channels["u_previous"] + 1]
+    dt = raw_x[..., channels["dt"]:channels["dt"] + 1]
+    return _mean_square((target - previous) / dt)
+
+
+def compute_loss_terms(task, raw_x, target, pred, target_normalized, pred_normalized,
+                       metadata, weights, model_regularization=0.0):
+    data = _mean_square(pred_normalized - target_normalized)
+    residual = (_mean_square(pde_residual(task, raw_x, pred, metadata))
+                / (residual_reference_scale(task, raw_x, target, metadata) + 1.0e-8))
+    boundary = boundary_loss(task, raw_x, pred, metadata)
+    gradient = gradient_loss(task, target, pred, metadata)
+    correction = tf.cast(model_regularization, pred.dtype)
+    total = (
+        weights.get("data", 1.0) * data
+        + weights.get("residual", 0.0) * residual
+        + weights.get("boundary", 0.0) * boundary
+        + weights.get("gradient", 0.0) * gradient
+        + correction
+    )
+    return {"total": total, "data": data, "residual": residual,
+            "boundary": boundary, "gradient": gradient, "correction": correction}

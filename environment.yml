@@ -1,0 +1,14 @@
+name: ml-kan-unet
+channels:
+  - conda-forge
+dependencies:
+  - python=3.10
+  - numpy=1.23
+  - scipy
+  - pandas
+  - matplotlib
+  - psutil
+  - pytest
+  - pip
+  - pip:
+      - tensorflow==2.12.0
