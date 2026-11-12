@@ -1,0 +1,71 @@
+{
+  "base_config": "configs/default.json",
+  "data_root": "data/generated",
+  "result_root": "results/main",
+  "seeds": [0, 1, 2, 3, 4],
+  "tasks": [
+    {
+      "task": "burgers",
+      "data": {"n": 1024, "n_groups": 200, "seed": 2026, "final_time": 0.1, "save_dt": 0.01},
+      "variants": [
+        {"model": "M0", "label": "M0_unet"}, {"model": "M1", "label": "M1_single_kan"},
+        {"model": "M2", "label": "M2_multilevel_fixed"}, {"model": "M3", "label": "M3_spatial"},
+        {"model": "M4", "label": "M4_se"}, {"model": "M5", "label": "M5_joint"},
+        {"model": "M6", "label": "M6_conv_matched"}, {"model": "M7", "label": "M7_mlp_matched"},
+        {"model": "M8", "label": "M8_rescnn"}, {"model": "M9", "label": "M9_rescnn_multistage"},
+        {"model": "M10", "label": "M10_fno"}, {"model": "M11", "label": "M11_fno_physics"}
+      ]
+    },
+    {
+      "task": "allen_cahn",
+      "data": {"n": 1024, "n_groups": 200, "seed": 2026, "final_time": 0.1, "save_dt": 0.01},
+      "variants": [
+        {"model": "M0", "label": "M0_unet"}, {"model": "M1", "label": "M1_single_kan"},
+        {"model": "M2", "label": "M2_multilevel_fixed"}, {"model": "M5", "label": "M5_joint"},
+        {"model": "M6", "label": "M6_conv_matched"}, {"model": "M10", "label": "M10_fno"},
+        {"model": "M11", "label": "M11_fno_physics"}
+      ]
+    },
+    {
+      "task": "trig_n4",
+      "data": {"n": 64, "n_groups": 1000, "seed": 2026},
+      "variants": [
+        {"model": "M0", "label": "M0_unet"}, {"model": "M1", "label": "M1_single_kan"},
+        {"model": "M2", "label": "M2_multilevel_fixed"}, {"model": "M3", "label": "M3_spatial"},
+        {"model": "M4", "label": "M4_se"}, {"model": "M5", "label": "M5_joint"},
+        {"model": "M6", "label": "M6_conv_matched"}, {"model": "M7", "label": "M7_mlp_matched"},
+        {"model": "M10", "label": "M10_fno"}, {"model": "M11", "label": "M11_fno_physics"}
+      ]
+    },
+    {
+      "task": "peak",
+      "data": {"n": 64, "n_groups": 1000, "seed": 2026},
+      "variants": [
+        {"model": "M0", "label": "M0_unet"}, {"model": "M1", "label": "M1_single_kan"},
+        {"model": "M2", "label": "M2_multilevel_fixed"}, {"model": "M5", "label": "M5_joint"},
+        {"model": "M6", "label": "M6_conv_matched"}, {"model": "M10", "label": "M10_fno"},
+        {"model": "M11", "label": "M11_fno_physics"}
+      ]
+    },
+    {
+      "task": "exp_trig",
+      "data": {"n": 64, "n_groups": 1000, "seed": 2026},
+      "variants": [
+        {"model": "M0", "label": "M0_unet"}, {"model": "M1", "label": "M1_single_kan"},
+        {"model": "M2", "label": "M2_multilevel_fixed"}, {"model": "M5", "label": "M5_joint"},
+        {"model": "M6", "label": "M6_conv_matched"}, {"model": "M10", "label": "M10_fno"},
+        {"model": "M11", "label": "M11_fno_physics"}
+      ]
+    },
+    {
+      "task": "gaussian_heat",
+      "data": {"n": 64, "n_groups": 100, "seed": 2026, "final_time": 0.1, "save_dt": 0.01},
+      "variants": [
+        {"model": "M0", "label": "M0_unet"}, {"model": "M1", "label": "M1_single_kan"},
+        {"model": "M2", "label": "M2_multilevel_fixed"}, {"model": "M5", "label": "M5_joint"},
+        {"model": "M6", "label": "M6_conv_matched"}, {"model": "M10", "label": "M10_fno"},
+        {"model": "M11", "label": "M11_fno_physics"}
+      ]
+    }
+  ]
+}

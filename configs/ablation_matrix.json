@@ -1,0 +1,49 @@
+{
+  "base_config": "configs/default.json",
+  "data_root": "data/generated",
+  "result_root": "results/ablations",
+  "seeds": [0, 1, 2, 3, 4],
+  "tasks": [
+    {
+      "task": "trig_n4",
+      "data": {"n": 64, "n_groups": 1000, "seed": 2026},
+      "variants": [
+        {"model": "M2", "label": "levels_shallow", "overrides": {"model": {"correction_levels": [0]}}},
+        {"model": "M2", "label": "levels_middle", "overrides": {"model": {"correction_levels": [1]}}},
+        {"model": "M2", "label": "levels_deep", "overrides": {"model": {"correction_levels": [2]}}},
+        {"model": "M2", "label": "levels_shallow_middle", "overrides": {"model": {"correction_levels": [0, 1]}}},
+        {"model": "M2", "label": "levels_middle_deep", "overrides": {"model": {"correction_levels": [1, 2]}}},
+        {"model": "M2", "label": "levels_shallow_deep", "overrides": {"model": {"correction_levels": [0, 2]}}},
+        {"model": "M2", "label": "levels_all", "overrides": {"model": {"correction_levels": [0, 1, 2]}}},
+        {"model": "M2", "label": "gate_none", "overrides": {"model": {"gate_override": "none"}}},
+        {"model": "M2", "label": "gate_fixed", "overrides": {"model": {"gate_override": "fixed"}}},
+        {"model": "M2", "label": "gate_scalar", "overrides": {"model": {"gate_override": "learnable_scalar"}}},
+        {"model": "M2", "label": "gate_spatial", "overrides": {"model": {"gate_override": "spatial"}}},
+        {"model": "M2", "label": "gate_se", "overrides": {"model": {"gate_override": "se"}}},
+        {"model": "M2", "label": "gate_joint", "overrides": {"model": {"gate_override": "joint"}}},
+        {"model": "M2", "label": "loss_data", "overrides": {"loss": {"residual": 0.0, "boundary": 0.0, "gradient": 0.0, "correction": 0.0}}},
+        {"model": "M2", "label": "loss_data_residual", "overrides": {"loss": {"residual": 0.1, "boundary": 0.0, "gradient": 0.0, "correction": 0.0}}},
+        {"model": "M2", "label": "loss_data_residual_boundary", "overrides": {"loss": {"residual": 0.1, "boundary": 1.0, "gradient": 0.0, "correction": 0.0}}},
+        {"model": "M2", "label": "loss_full_no_corr", "overrides": {"loss": {"correction": 0.0}}},
+        {"model": "M2", "label": "loss_full", "overrides": {}},
+        {"model": "M2", "label": "grid_4", "overrides": {"model": {"kan_grid_size": 4}}},
+        {"model": "M2", "label": "grid_8", "overrides": {"model": {"kan_grid_size": 8}}},
+        {"model": "M2", "label": "grid_16", "overrides": {"model": {"kan_grid_size": 16}}},
+        {"model": "M2", "label": "spline_order_1", "overrides": {"model": {"spline_order": 1}}},
+        {"model": "M2", "label": "spline_order_2", "overrides": {"model": {"spline_order": 2}}},
+        {"model": "M2", "label": "spline_order_3", "overrides": {"model": {"spline_order": 3}}},
+        {"model": "M2", "label": "width_small", "overrides": {"model": {"kan_widths": [8, 8, 16]}}},
+        {"model": "M2", "label": "width_default", "overrides": {"model": {"kan_widths": [8, 16, 32]}}},
+        {"model": "M2", "label": "width_large", "overrides": {"model": {"kan_widths": [16, 32, 64]}}}
+        ,{"model": "M2", "label": "kan_independent_equal_width", "overrides": {"model": {"kan_widths": [16, 16, 16], "share_kan": false}}}
+        ,{"model": "M2", "label": "kan_shared_equal_width", "overrides": {"model": {"kan_widths": [16, 16, 16], "share_kan": true}}}
+        ,{"model": "M2", "label": "gamma_small", "overrides": {"model": {"gammas": [0.01, 0.02, 0.04]}}}
+        ,{"model": "M2", "label": "gamma_default", "overrides": {"model": {"gammas": [0.02, 0.05, 0.08]}}}
+        ,{"model": "M2", "label": "gamma_large", "overrides": {"model": {"gammas": [0.05, 0.10, 0.15]}}}
+        ,{"model": "M2", "label": "warmup_0", "overrides": {"training": {"correction_warmup_ratio": 0.0}}}
+        ,{"model": "M2", "label": "warmup_0p1", "overrides": {"training": {"correction_warmup_ratio": 0.1}}}
+        ,{"model": "M2", "label": "warmup_0p2", "overrides": {"training": {"correction_warmup_ratio": 0.2}}}
+      ]
+    }
+  ]
+}

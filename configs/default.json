@@ -1,0 +1,36 @@
+{
+  "model": {
+    "base_channels": 32,
+    "depth": 3,
+    "kernel_size": 5,
+    "activation": "gelu",
+    "correction_levels": [0, 1, 2],
+    "gammas": [0.02, 0.05, 0.08],
+    "kan_widths": [8, 16, 32],
+    "kan_grid_size": 8,
+    "kan_basis": "bspline",
+    "spline_order": 3,
+    "share_kan": false,
+    "rescnn_channels": 64,
+    "rescnn_blocks": 6,
+    "rescnn_kan_widths": [16, 16, 16],
+    "fno_width": 48,
+    "fno_modes": 16,
+    "fno_blocks": 4
+  },
+  "training": {
+    "epochs": 100,
+    "batch_size": 16,
+    "learning_rate": 0.001,
+    "clipnorm": 1.0,
+    "patience": 20,
+    "correction_warmup_ratio": 0.1
+  },
+  "loss": {
+    "data": 1.0,
+    "residual": 0.1,
+    "boundary": 1.0,
+    "gradient": 0.1,
+    "correction": 0.0001
+  }
+}

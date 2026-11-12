@@ -1,0 +1,26 @@
+{
+  "base_config": "configs/default.json",
+  "data_root": "data/generated",
+  "result_root": "results/stage1",
+  "seeds": [0, 1, 2, 3, 4],
+  "tasks": [
+    {
+      "task": "burgers",
+      "data": {"n": 1024, "n_groups": 100, "seed": 2026, "final_time": 0.1, "save_dt": 0.01},
+      "variants": [
+        {"model": "M0", "label": "M0_unet"},
+        {"model": "M1", "label": "M1_single_kan"},
+        {"model": "M2", "label": "M2_multilevel_fixed"}
+      ]
+    },
+    {
+      "task": "trig_n4",
+      "data": {"n": 64, "n_groups": 1000, "seed": 2026},
+      "variants": [
+        {"model": "M0", "label": "M0_unet"},
+        {"model": "M1", "label": "M1_single_kan"},
+        {"model": "M2", "label": "M2_multilevel_fixed"}
+      ]
+    }
+  ]
+}
